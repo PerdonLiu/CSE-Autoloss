@@ -1,10 +1,11 @@
+import inspect
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.runner import auto_fp16, force_fp32
 from torch.nn.modules.utils import _pair
 
-from mmdet.core import build_bbox_coder, multi_apply, multiclass_nms
+from mmdet.core import build_bbox_coder, multi_apply, multiclass_nms, bbox_overlaps
 from mmdet.models.builder import HEADS, build_loss
 from mmdet.models.losses import accuracy
 
@@ -149,16 +150,7 @@ class BBoxHead(nn.Module):
              bbox_weights,
              reduction_override=None):
         losses = dict()
-        if cls_score is not None:
-            avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
-            if cls_score.numel() > 0:
-                losses['loss_cls'] = self.loss_cls(
-                    cls_score,
-                    labels,
-                    label_weights,
-                    avg_factor=avg_factor,
-                    reduction_override=reduction_override)
-                losses['acc'] = accuracy(cls_score, labels)
+
         if bbox_pred is not None:
             bg_class_ind = self.num_classes
             # 0~self.num_classes-1 are FG, self.num_classes is BG
@@ -183,6 +175,31 @@ class BBoxHead(nn.Module):
                     reduction_override=reduction_override)
             else:
                 losses['loss_bbox'] = bbox_pred[pos_inds].sum()
+
+        if cls_score is not None:
+            avg_factor = max(torch.sum(label_weights > 0).float().item(), 1.)
+            if cls_score.numel() > 0:
+                argspec = inspect.getargspec(self.loss_cls.forward)
+                pos_ious = bbox_overlaps(
+                    pos_bbox_pred,
+                    bbox_targets[pos_inds.type(torch.bool)],
+                    is_aligned=True).clamp(min=1e-7)
+                if 'pos_ious' not in argspec.args:
+                    losses['loss_cls'] = self.loss_cls(
+                        cls_score,
+                        labels,
+                        label_weights,
+                        avg_factor=avg_factor,
+                        reduction_override=reduction_override)
+                else:
+                    losses['loss_cls'] = self.loss_cls(
+                        cls_score,
+                        labels,
+                        pos_ious=pos_ious,
+                        weight=label_weights,
+                        avg_factor=avg_factor,
+                        reduction_override=reduction_override)
+                losses['acc'] = accuracy(cls_score, labels)
         return losses
 
     @force_fp32(apply_to=('cls_score', 'bbox_pred'))

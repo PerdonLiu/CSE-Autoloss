@@ -130,3 +130,7 @@ dmypy.json
 
 # custom
 .idea/
+prepare/
+work_dirs/
+checkpoints/
+test/

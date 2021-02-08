@@ -1,10 +1,11 @@
+import inspect
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import Scale, normal_init
 from mmcv.runner import force_fp32
 
-from mmdet.core import distance2bbox, multi_apply, multiclass_nms
+from mmdet.core import distance2bbox, multi_apply, multiclass_nms, bbox_overlaps
 from ..builder import HEADS, build_loss
 from .anchor_free_head import AnchorFreeHead
 
@@ -219,20 +220,24 @@ class FCOSHead(AnchorFreeHead):
         pos_inds = ((flatten_labels >= 0)
                     & (flatten_labels < bg_class_ind)).nonzero().reshape(-1)
         num_pos = len(pos_inds)
-        loss_cls = self.loss_cls(
-            flatten_cls_scores, flatten_labels,
-            avg_factor=num_pos + num_imgs)  # avoid num_pos is 0
 
         pos_bbox_preds = flatten_bbox_preds[pos_inds]
         pos_centerness = flatten_centerness[pos_inds]
 
+        pos_ious = None
         if num_pos > 0:
             pos_bbox_targets = flatten_bbox_targets[pos_inds]
-            pos_centerness_targets = self.centerness_target(pos_bbox_targets)
             pos_points = flatten_points[pos_inds]
             pos_decoded_bbox_preds = distance2bbox(pos_points, pos_bbox_preds)
             pos_decoded_target_preds = distance2bbox(pos_points,
                                                      pos_bbox_targets)
+            
+            pos_ious = bbox_overlaps(
+                pos_decoded_bbox_preds,
+                pos_decoded_target_preds,
+                is_aligned=True).clamp(min=1e-7)
+            pos_centerness_targets = pos_ious.detach()
+            
             # centerness weighted iou loss
             loss_bbox = self.loss_bbox(
                 pos_decoded_bbox_preds,
@@ -244,6 +249,17 @@ class FCOSHead(AnchorFreeHead):
         else:
             loss_bbox = pos_bbox_preds.sum()
             loss_centerness = pos_centerness.sum()
+
+        # classification loss
+        argspec = inspect.getargspec(self.loss_cls.forward)
+        if 'pos_ious' not in argspec.args:
+            loss_cls = self.loss_cls(
+                flatten_cls_scores, flatten_labels,
+                avg_factor=num_pos + num_imgs)  # avoid num_pos is 0
+        else:
+            loss_cls = self.loss_cls(
+                flatten_cls_scores, flatten_labels, pos_ious=pos_ious, weight=None,
+                avg_factor=num_pos + num_imgs)  # avoid num_pos is 0
 
         return dict(
             loss_cls=loss_cls,

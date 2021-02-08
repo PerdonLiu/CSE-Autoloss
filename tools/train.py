@@ -16,11 +16,13 @@ from mmdet.apis import set_random_seed, train_detector
 from mmdet.datasets import build_dataset
 from mmdet.models import build_detector
 from mmdet.utils import collect_env, get_root_logger
-
+from tools.get_loss import build_binary_cls_loss, build_multi_cls_loss, build_reg_loss
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('config', help='train config file path')
+    parser.add_argument('--loss_cls', help='str to build cls loss function')
+    parser.add_argument('--loss_reg', help='str to build reg loss function')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
         '--resume-from', help='the checkpoint file to resume from')
@@ -82,6 +84,46 @@ def parse_args():
 
     return args
 
+def rebuild_model_loss(model, loss_cls, loss_reg):
+    if 'roi_head' in dir(model): # Two-Stage
+        if loss_cls is not None and loss_cls != 'None' and loss_cls != 'none':
+            if not isinstance(model.roi_head.bbox_head, torch.nn.modules.container.ModuleList): # Faster R-CNN
+                cls_loss_weight = model.roi_head.bbox_head.loss_cls.loss_weight
+                loss_cls_fun = build_multi_cls_loss(loss_cls, loss_weight=cls_loss_weight)
+                model.roi_head.bbox_head.loss_cls = loss_cls_fun
+            else:
+                if len(model.roi_head.bbox_head) == 3: # Cascade R-CNN
+                    cls_loss_weight = model.roi_head.bbox_head[0].loss_cls.loss_weight
+                    loss_cls_fun = build_multi_cls_loss(loss_cls, loss_weight=cls_loss_weight)
+                    model.roi_head.bbox_head[0].loss_cls = loss_cls_fun
+                    model.roi_head.bbox_head[1].loss_cls = loss_cls_fun
+                    model.roi_head.bbox_head[2].loss_cls = loss_cls_fun
+                else:
+                    raise NotImplementedError
+        if loss_reg is not None and loss_reg != 'None' and loss_reg != 'none':
+            if not isinstance(model.roi_head.bbox_head, torch.nn.modules.container.ModuleList): # Faster R-CNN
+                reg_loss_weight = model.roi_head.bbox_head.loss_bbox.loss_weight
+                loss_bbox_fun = build_reg_loss(loss_reg, loss_weight=reg_loss_weight)
+                model.roi_head.bbox_head.loss_bbox = loss_bbox_fun
+            else:
+                if len(model.roi_head.bbox_head) == 3: # Cascade R-CNN
+                    reg_loss_weight = model.roi_head.bbox_head[0].loss_bbox.loss_weight
+                    loss_bbox_fun = build_reg_loss(loss_reg, loss_weight=reg_loss_weight)
+                    model.roi_head.bbox_head[0].loss_bbox = loss_bbox_fun
+                    model.roi_head.bbox_head[1].loss_bbox = loss_bbox_fun
+                    model.roi_head.bbox_head[2].loss_bbox = loss_bbox_fun
+                else:
+                    raise NotImplementedError
+    elif 'bbox_head' in dir(model): # One-Stage
+        if loss_cls is not None and loss_cls != 'None' and loss_cls != 'none':
+            cls_loss_weight = model.bbox_head.loss_cls.loss_weight
+            model.bbox_head.loss_cls = build_binary_cls_loss(loss_cls, loss_weight=cls_loss_weight)
+        if loss_reg is not None and loss_reg != 'None' and loss_reg != 'none':
+            reg_loss_weight = model.bbox_head.loss_bbox.loss_weight
+            model.bbox_head.loss_bbox = build_reg_loss(loss_reg, loss_weight=reg_loss_weight)
+    else:
+        raise NotImplementedError
+    return model
 
 def main():
     args = parse_args()
@@ -157,6 +199,16 @@ def main():
 
     model = build_detector(
         cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
+
+    if args.loss_cls is None:
+        logger.info('Train with default cls loss')
+    else:
+        logger.info(f'Train with auto loss cls: {args.loss_cls}')
+    if args.loss_reg is None:
+        logger.info('Train with default reg loss')
+    else:
+        logger.info(f'Train with auto loss reg: {args.loss_reg}')
+    model = rebuild_model_loss(model, args.loss_cls, args.loss_reg)
 
     datasets = [build_dataset(cfg.data.train)]
     if len(cfg.workflow) == 2:

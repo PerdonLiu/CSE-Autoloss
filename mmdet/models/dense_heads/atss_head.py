@@ -1,3 +1,4 @@
+import inspect
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, Scale, bias_init_with_prob, normal_init
@@ -5,7 +6,7 @@ from mmcv.runner import force_fp32
 
 from mmdet.core import (anchor_inside_flags, build_assigner, build_sampler,
                         images_to_levels, multi_apply, multiclass_nms,
-                        reduce_mean, unmap)
+                        reduce_mean, unmap, bbox_overlaps)
 from ..builder import HEADS, build_loss
 from .anchor_head import AnchorHead
 
@@ -175,27 +176,28 @@ class ATSSHead(AnchorHead):
         labels = labels.reshape(-1)
         label_weights = label_weights.reshape(-1)
 
-        # classification loss
-        loss_cls = self.loss_cls(
-            cls_score, labels, label_weights, avg_factor=num_total_samples)
-
         # FG cat_id: [0, num_classes -1], BG cat_id: num_classes
         bg_class_ind = self.num_classes
         pos_inds = ((labels >= 0)
                     & (labels < bg_class_ind)).nonzero().squeeze(1)
-
+        
+        pos_ious = None
         if len(pos_inds) > 0:
             pos_bbox_targets = bbox_targets[pos_inds]
             pos_bbox_pred = bbox_pred[pos_inds]
             pos_anchors = anchors[pos_inds]
             pos_centerness = centerness[pos_inds]
 
-            centerness_targets = self.centerness_target(
-                pos_anchors, pos_bbox_targets)
             pos_decode_bbox_pred = self.bbox_coder.decode(
                 pos_anchors, pos_bbox_pred)
             pos_decode_bbox_targets = self.bbox_coder.decode(
                 pos_anchors, pos_bbox_targets)
+
+            pos_ious = bbox_overlaps(
+                pos_decode_bbox_pred,
+                pos_decode_bbox_targets,
+                is_aligned=True).clamp(min=1e-7)
+            centerness_targets = pos_ious.detach()
 
             # regression loss
             loss_bbox = self.loss_bbox(
@@ -214,6 +216,15 @@ class ATSSHead(AnchorHead):
             loss_bbox = bbox_pred.sum() * 0
             loss_centerness = centerness.sum() * 0
             centerness_targets = bbox_targets.new_tensor(0.)
+
+        # classification loss
+        argspec = inspect.getargspec(self.loss_cls.forward)
+        if 'pos_ious' not in argspec.args:
+            loss_cls = self.loss_cls(
+                cls_score, labels, weight=label_weights, avg_factor=num_total_samples)
+        else:
+            loss_cls = self.loss_cls(
+                cls_score, labels, pos_ious=pos_ious, weight=label_weights, avg_factor=num_total_samples)
 
         return loss_cls, loss_bbox, loss_centerness, centerness_targets.sum()
 

@@ -14,50 +14,50 @@ Please see [get_started.md](docs/get_started.md) for the basic usage of MMDetect
 
 #### Two-Stage Best-Discovered Loss
 
-$$
-\text { CSE-Autoloss- } A_{\text {cls }}(x, y, w)=-(1+\sin (w)) y \log (\operatorname{softmax}(x))
-$$
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-(1&plus;\sin&space;(w))&space;y&space;\log&space;(\operatorname{softmax}(x))" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-}A_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-(1&plus;\sin&space;(w))&space;y&space;\log&space;(\operatorname{softmax}(x))" title="\text { CSE-Autoloss-}A_{\text {cls }}(x, y, w)=-(1+\sin (w)) y \log (\operatorname{softmax}(x))" /></p>
 
-Corresponding string: Neg(Dot(Mul(Y,Add(1,Sin(Z))),Log(Softmax(X))))
+```python
+CSE_Autoloss_A_cls='Neg(Dot(Mul(Y,Add(1,Sin(Z))),Log(Softmax(X))))'
+```
 
-$$
-\text { CSE-Autoloss- } A_{\text {reg }}(i, u, e)=\left(1-\frac{\imath}{u}\right)+\left(1-\frac{\imath+2}{e}\right)
-$$
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\left(1-\frac{i}{u}\right)&plus;\left(1-\frac{i&plus;2}{e}\right)" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-A}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\left(1-\frac{i}{u}\right)&plus;\left(1-\frac{i&plus;2}{e}\right)" title="\text { CSE-Autoloss-A}_{\text {reg }}(i, u, e)=\left(1-\frac{i}{u}\right)+\left(1-\frac{i+2}{e}\right)" /></p>
 
-Corresponding string: Add(1,Neg(Add(Div(I,U),Neg(Div(Add(E,Neg(Add(I,2))),E)))))
+```python
+CSE_Autoloss_A_reg='Add(1,Neg(Add(Div(I,U),Neg(Div(Add(E,Neg(Add(I,2))),E)))))'
+```
 
 #### One-Stage Best-Discovered Loss
 
-$$
-\text { CSE-Autoloss- } \mathrm{B}_{\mathrm{cls}}(x, y, w)=-[w y(1+\operatorname{erf}(\sigma(1-y))) \log \sigma(x)+(\operatorname{gd}(x)-w y)(\sigma(x)-w y) \log (1-\sigma(x))]
-$$
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-B}_{\mathrm{cls}}(x,&space;y,&space;w)=-[w&space;y(1&plus;\operatorname{erf}(\sigma(1-y)))&space;\log&space;\sigma(x)&plus;(\operatorname{gd}(x)-w&space;y)(\sigma(x)-w&space;y)&space;\log&space;(1-\sigma(x))]" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-B}_{\mathrm{cls}}(x,&space;y,&space;w)=-[w&space;y(1&plus;\operatorname{erf}(\sigma(1-y)))&space;\log&space;\sigma(x)&plus;(\operatorname{gd}(x)-w&space;y)(\sigma(x)-w&space;y)&space;\log&space;(1-\sigma(x))]" title="\text { CSE-Autoloss-B}_{\mathrm{cls}}(x, y, w)=-[w y(1+\operatorname{erf}(\sigma(1-y))) \log \sigma(x)+(\operatorname{gd}(x)-w y)(\sigma(x)-w y) \log (1-\sigma(x))]" /></p>
 
-Corresponding string: Neg(Add(Mul(Q,Mul(Add(1,Serf(Sig(NY))),Log(Sig(X)))),Mul(Add(Sgdf(X),Neg(Q)),Mul(Add(Add(1,Neg(Q)),Neg(Add(1,Neg(Sig(X))))),Log(Add(1,Neg(Sig(X))))))))
+```python
+CSE_Autoloss_B_cls='Neg(Add(Mul(Q,Mul(Add(1,Serf(Sig(NY))),Log(Sig(X)))),Mul(Add(Sgdf(X),Neg(Q)),Mul(Add(Add(1,Neg(Q)),Neg(Add(1,Neg(Sig(X))))),Log(Add(1,Neg(Sig(X))))))))'
+```
 
-$$
-\text { CSE-Autoloss- } B_{\text {reg }}(i, u, e)=\frac{3 e u+12 e+3 i+3 u+18}{-3 e u+i u+u^{2}-15 e+5 i+5 u}
-$$
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-B}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\frac{3&space;e&space;u&plus;12&space;e&plus;3&space;i&plus;3&space;u&plus;18}{-3&space;e&space;u&plus;i&space;u&plus;u^{2}-15&space;e&plus;5&space;i&plus;5&space;u}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-B}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\frac{3&space;e&space;u&plus;12&space;e&plus;3&space;i&plus;3&space;u&plus;18}{-3&space;e&space;u&plus;i&space;u&plus;u^{2}-15&space;e&plus;5&space;i&plus;5&space;u}" title="\text { CSE-Autoloss-B}_{\text {reg }}(i, u, e)=\frac{3 e u+12 e+3 i+3 u+18}{-3 e u+i u+u^{2}-15 e+5 i+5 u}" /></p>
 
-Corresponding string: Neg(Div(Add(Div(Neg(Add(Neg(E),Add(1,I))),Neg(Add(3,Add(2,U)))),Add(Div(E,E),Div(Neg(E),Neg(1)))),Neg(Add(Div(Neg(Add(U,Div(I,1))),Neg(3)),Neg(E)))))
+```python
+CSE_Autoloss_B_reg='Neg(Div(Add(Div(Neg(Add(Neg(E),Add(1,I))),Neg(Add(3,Add(2,U)))),Add(Div(E,E),Div(Neg(E),Neg(1)))),Neg(Add(Div(Neg(Add(U,Div(I,1))),Neg(3)),Neg(E)))))'
+```
 
-- *erf* for scaled error function, *gd* for scaled Gudermannian function. 
+- *erf* for scaled error function, *gd* for scaled gudermannian function.
 
 ## Performance
 Performance for COCO test are as follows.
 Detector | Loss | Bbox mAP | Command
 --- |:---:|:---:|:---:
-Faster R-CNN R50 | CSE-Autoloss-A | 38.5 | [Link](commands/faster_rcnn_r50_fpn_giou_1x_coco.sh)
-Faster R-CNN R101 | CSE-Autoloss-A | 40.2 | [Link](commands/faster_rcnn_r101_fpn_giou_1x_coco.sh)
-Cascade R-CNN R50 | CSE-Autoloss-A | 40.5 | [Link](commands/cascade_rcnn_r50_fpn_giou_1x_coco.sh)
-Mask R-CNN R50 | CSE-Autoloss-A | 39.1 | [Link](commands/mask_rcnn_r50_fpn_giou_1x_coco.sh)
-FCOS R50 | CSE-Autoloss-B | 39.6 | [Link](commands/fcos_center-normbbox-centeronreg-giou_r50_caffe_fpn_gn-head_4x4_1x_coco.sh)
-ATSS R50 | CSE-Autoloss-B | 40.5 | [Link](commands/atss_r50_fpn_giou_1x_coco_w1.sh)
+Faster R-CNN R50 | CSE-Autoloss-A | 38.5% | [Link](commands/faster_rcnn_r50_fpn_giou_1x_coco.sh)
+Faster R-CNN R101 | CSE-Autoloss-A | 40.2% | [Link](commands/faster_rcnn_r101_fpn_giou_1x_coco.sh)
+Cascade R-CNN R50 | CSE-Autoloss-A | 40.5% | [Link](commands/cascade_rcnn_r50_fpn_giou_1x_coco.sh)
+Mask R-CNN R50 | CSE-Autoloss-A | 39.1% | [Link](commands/mask_rcnn_r50_fpn_giou_1x_coco.sh)
+FCOS R50 | CSE-Autoloss-B | 39.6% | [Link](commands/fcos_center-normbbox-centeronreg-giou_r50_caffe_fpn_gn-head_4x4_1x_coco.sh)
+ATSS R50 | CSE-Autoloss-B | 40.5% | [Link](commands/atss_r50_fpn_giou_1x_coco_w1.sh)
 
 [1] We replace the centerness_target in FCOS and ATSS to the **IoU** between bbox_pred and bbox_target. Please see more details in xx and xx (line in Github).
 
 [2] For the search loss combinations, loss_bbox weight for ATSS sets to 1 (instead of 2). Please see more details [here](commands/atss_r50_fpn_giou_1x_coco_w1.sh). 
 
-## Quick start to train the model with search/deault loss combinations
+## Quick start to train the model with searched/deault loss combinations
 ```
 # cls - classification, reg - regression
 

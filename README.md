@@ -2,7 +2,7 @@
 
 Designing proper loss functions for vision tasks has been a long-standing research direction to advance the capability of existing models. For object detection, the well-established classification and regression loss functions have been carefully designed by considering diverse learning challenges (e.g. class imbalance, hard negative samples, and scale variances). Inspired by the recent progress in network architecture search, it is interesting to explore the possibility of discovering new loss function formulations via directly searching the primitive operation combinations. So that the learned losses not only fit for diverse object detection challenges to alleviate huge human efforts, but also have better alignment with evaluation metric and good mathematical convergence property. Beyond the previous auto-loss works on face recognition and image classification, our work makes the first attempt to discover new loss functions for the challenging object detection from primitive operation levels and finds the searched losses are insightful. We propose an effective convergence-simulation driven evolutionary search algorithm, called CSE-Autoloss, for speeding up the search progress by regularizing the mathematical rationality of loss candidates via two progressive convergence simulation modules: convergence property verification and model optimization simulation. The best-discovered loss function combinations **CSE-Autoloss-A** and **CSE-Autoloss-B** outperform default combinations (Cross-entropy/Focal loss for classification and L1 loss for regression) by 1.1\% and 0.8\% in terms of mAP for two-stage and one-stage detectors on COCO respectively.
 
-The repository contains the demo training scripts for the best-searched loss combinations of our paper (ICLR2021) [Loss Function Discovery for Object Detection via Convergence-Simulation Driven Search](https://openreview.net/forum?id=5jzlpHvvRk). 
+The repository contains the demo training scripts for the best-searched loss combinations of our paper (ICLR2021) [Loss Function Discovery for Object Detection via Convergence-Simulation Driven Search](https://openreview.net/pdf?id=5jzlpHvvRk). 
 
 ## Installation
 Please refer to [get_started.md](docs/get_started.md) for installation.
@@ -77,7 +77,7 @@ python -m torch.distributed.launch --nproc_per_node=$GPUS --master_port=$PORT ./
 ```
 
 ## Acknowledgement
-Thanks to MMDetection Team for maintaining such a powerful open source project!
+Thanks to MMDetection Team for their powerful deep learning detection framework. Thanks to Gengwei Zhang for his close support on both experiment and paper. Thanks to Bochao Wang, Hang Xu, Xiaodan Liang for their valuable discussions. Thanks to Huawei Noah's Ark Lab AI Theory Group for their thousands of V100 GPUs.
 
 ## Citation
 If you use this toolbox or benchmark in your research, please cite this project.

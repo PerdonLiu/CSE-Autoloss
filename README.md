@@ -77,7 +77,7 @@ python -m torch.distributed.launch --nproc_per_node=$GPUS --master_port=$PORT ./
 ```
 
 ## Acknowledgement
-Thanks to MMDetection Team for their powerful deep learning detection framework. Thanks to Gengwei Zhang for his close support on both experiment and paper. Thanks to Bochao Wang, Hang Xu, Xiaodan Liang for their valuable discussions. Thanks to Huawei Noah's Ark Lab AI Theory Group for their thousands of V100 GPUs.
+Thanks to MMDetection Team for their powerful deep learning detection framework. Thanks to Huawei Noah's Ark Lab AI Theory Group for their numerous V100 GPUs.
 
 ## Citation
 If you use this toolbox or benchmark in your research, please cite this project.

@@ -14,7 +14,7 @@ Please see [get_started.md](docs/get_started.md) for the basic usage of MMDetect
 
 #### Two-Stage Best-Discovered Loss
 
-<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-(1&plus;\sin&space;(w))&space;y&space;\log&space;(\operatorname{softmax}(x))" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-}A_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-(1&plus;\sin&space;(w))&space;y&space;\log&space;(\operatorname{softmax}(x))" title="\text { CSE-Autoloss-A}_{\text {cls }}(x, y, w)=-(1+\sin (w)) y \log (\operatorname{softmax}(x))" /></p>
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A&space;}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-\operatorname{dot}((1&plus;\sin&space;(w))&space;y,&space;\log&space;(\operatorname{softmax}(x)))" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-A&space;}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-\operatorname{dot}((1&plus;\sin&space;(w))&space;y,&space;\log&space;(\operatorname{softmax}(x)))" title="\text { CSE-Autoloss-A }_{\text {cls }}(x, y, w)=-\operatorname{dot}((1+\sin (w)) y, \log (\operatorname{softmax}(x)))" /></p>
 
 ```python
 CSE_Autoloss_A_cls='Neg(Dot(Mul(Y,Add(1,Sin(Z))),Log(Softmax(X))))'
@@ -41,7 +41,7 @@ CSE_Autoloss_B_reg='Neg(Div(Add(Div(Neg(Add(Neg(E),Add(1,I))),Neg(Add(3,Add(2,U)
 ```
 
 [1] *u*, *i*, *e*, *w* indicate union, intersection, enclose and intersection-over-union (IoU) between bounding box prediction and groundtruth. *x*, *y* are for class prediction and label.  
-[2] *erf* is for scaled error function, *gd* is for scaled gudermannian function. Please see more details about "S"-shaped curve at [wiki](https://en.wikipedia.org/wiki/Sigmoid_function).
+[2] *dot* is for dot product, *erf* is for scaled error function, *gd* is for scaled gudermannian function. Please see more details about "S"-shaped curve at [wiki](https://en.wikipedia.org/wiki/Sigmoid_function).
 
 ## Performance
 Performance for COCO val are as follows.

@@ -14,13 +14,13 @@ Please see [get_started.md](docs/get_started.md) for the basic usage of MMDetect
 
 #### Two-Stage Best-Discovered Loss
 
-<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A&space;}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-\operatorname{dot}((1&plus;\sin&space;(w))&space;y,&space;\log&space;(\operatorname{softmax}(x)))" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-A&space;}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-\operatorname{dot}((1&plus;\sin&space;(w))&space;y,&space;\log&space;(\operatorname{softmax}(x)))" title="\text { CSE-Autoloss-A }_{\text {cls }}(x, y, w)=-\operatorname{dot}((1+\sin (w)) y, \log (\operatorname{softmax}(x)))" /></p>
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A&space;}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-\operatorname{dot}((1&plus;\sin&space;(w))&space;y,&space;\log&space;(\operatorname{softmax}(x)))" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-A&space;}_{\text&space;{cls&space;}}(x,&space;y,&space;w)=-\operatorname{dot}((1&plus;\sin&space;(w))&space;y,&space;\log&space;(\operatorname{softmax}(x)))" title="\text{CSE-Autoloss-A }_{\text{cls}}(x, y, w)=-\operatorname{dot}((1+\sin (w)) y, \log (\operatorname{softmax}(x)))" /></p>
 
 ```python
 CSE_Autoloss_A_cls='Neg(Dot(Mul(Y,Add(1,Sin(Z))),Log(Softmax(X))))'
 ```
 
-<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\left(1-\frac{i}{u}\right)&plus;\left(1-\frac{i&plus;2}{e}\right)" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-A}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\left(1-\frac{i}{u}\right)&plus;\left(1-\frac{i&plus;2}{e}\right)" title="\text { CSE-Autoloss-A}_{\text {reg }}(i, u, e)=\left(1-\frac{i}{u}\right)+\left(1-\frac{i+2}{e}\right)" /></p>
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-A}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\left(1-\frac{i}{u}\right)&plus;\left(1-\frac{i&plus;2}{e}\right)" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-A}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\left(1-\frac{i}{u}\right)&plus;\left(1-\frac{i&plus;2}{e}\right)" title="\text{CSE-Autoloss-A}_{\text {reg }}(i, u, e)=\left(1-\frac{i}{u}\right)+\left(1-\frac{i+2}{e}\right)" /></p>
 
 ```python
 CSE_Autoloss_A_reg='Add(1,Neg(Add(Div(I,U),Neg(Div(Add(E,Neg(Add(I,2))),E)))))'
@@ -28,13 +28,13 @@ CSE_Autoloss_A_reg='Add(1,Neg(Add(Div(I,U),Neg(Div(Add(E,Neg(Add(I,2))),E)))))'
 
 #### One-Stage Best-Discovered Loss
 
-<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-B}_{\mathrm{cls}}(x,&space;y,&space;w)=-[w&space;y(1&plus;\operatorname{erf}(\sigma(1-y)))&space;\log&space;\sigma(x)&plus;(\operatorname{gd}(x)-w&space;y)(\sigma(x)-w&space;y)&space;\log&space;(1-\sigma(x))]" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-B}_{\mathrm{cls}}(x,&space;y,&space;w)=-[w&space;y(1&plus;\operatorname{erf}(\sigma(1-y)))&space;\log&space;\sigma(x)&plus;(\operatorname{gd}(x)-w&space;y)(\sigma(x)-w&space;y)&space;\log&space;(1-\sigma(x))]" title="\text { CSE-Autoloss-B}_{\mathrm{cls}}(x, y, w)=-[w y(1+\operatorname{erf}(\sigma(1-y))) \log \sigma(x)+(\operatorname{gd}(x)-w y)(\sigma(x)-w y) \log (1-\sigma(x))]" /></p>
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-B}_{\mathrm{cls}}(x,&space;y,&space;w)=-[w&space;y(1&plus;\operatorname{erf}(\sigma(1-y)))&space;\log&space;\sigma(x)&plus;(\operatorname{gd}(x)-w&space;y)(\sigma(x)-w&space;y)&space;\log&space;(1-\sigma(x))]" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-B}_{\mathrm{cls}}(x,&space;y,&space;w)=-[w&space;y(1&plus;\operatorname{erf}(\sigma(1-y)))&space;\log&space;\sigma(x)&plus;(\operatorname{gd}(x)-w&space;y)(\sigma(x)-w&space;y)&space;\log&space;(1-\sigma(x))]" title="\text{CSE-Autoloss-B}_{\mathrm{cls}}(x, y, w)=-[w y(1+\operatorname{erf}(\sigma(1-y))) \log \sigma(x)+(\operatorname{gd}(x)-w y)(\sigma(x)-w y) \log (1-\sigma(x))]" /></p>
 
 ```python
 CSE_Autoloss_B_cls='Neg(Add(Mul(Q,Mul(Add(1,Serf(Sig(NY))),Log(Sig(X)))),Mul(Add(Sgdf(X),Neg(Q)),Mul(Add(Add(1,Neg(Q)),Neg(Add(1,Neg(Sig(X))))),Log(Add(1,Neg(Sig(X))))))))'
 ```
 
-<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-B}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\frac{3&space;e&space;u&plus;12&space;e&plus;3&space;i&plus;3&space;u&plus;18}{-3&space;e&space;u&plus;i&space;u&plus;u^{2}-15&space;e&plus;5&space;i&plus;5&space;u}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-B}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\frac{3&space;e&space;u&plus;12&space;e&plus;3&space;i&plus;3&space;u&plus;18}{-3&space;e&space;u&plus;i&space;u&plus;u^{2}-15&space;e&plus;5&space;i&plus;5&space;u}" title="\text { CSE-Autoloss-B}_{\text {reg }}(i, u, e)=\frac{3 e u+12 e+3 i+3 u+18}{-3 e u+i u+u^{2}-15 e+5 i+5 u}" /></p>
+<p href="https://www.codecogs.com/eqnedit.php?latex=\text&space;{&space;CSE-Autoloss-B}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\frac{3&space;e&space;u&plus;12&space;e&plus;3&space;i&plus;3&space;u&plus;18}{-3&space;e&space;u&plus;i&space;u&plus;u^{2}-15&space;e&plus;5&space;i&plus;5&space;u}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\text&space;{&space;CSE-Autoloss-B}_{\text&space;{reg&space;}}(i,&space;u,&space;e)=\frac{3&space;e&space;u&plus;12&space;e&plus;3&space;i&plus;3&space;u&plus;18}{-3&space;e&space;u&plus;i&space;u&plus;u^{2}-15&space;e&plus;5&space;i&plus;5&space;u}" title="\text{CSE-Autoloss-B}_{\text{reg}}(i, u, e)=\frac{3 e u+12 e+3 i+3 u+18}{-3 e u+i u+u^{2}-15 e+5 i+5 u}" /></p>
 
 ```python
 CSE_Autoloss_B_reg='Neg(Div(Add(Div(Neg(Add(Neg(E),Add(1,I))),Neg(Add(3,Add(2,U)))),Add(Div(E,E),Div(Neg(E),Neg(1)))),Neg(Add(Div(Neg(Add(U,Div(I,1))),Neg(3)),Neg(E)))))'
@@ -45,14 +45,14 @@ CSE_Autoloss_B_reg='Neg(Div(Add(Div(Neg(Add(Neg(E),Add(1,I))),Neg(Add(3,Add(2,U)
 
 ## Performance
 Performance for COCO val are as follows.
-Detector | Loss | Bbox mAP | Command
---- |:---:|:---:|:---:
-Faster R-CNN R50 | CSE-Autoloss-A | 38.5% | [Link](commands/faster_rcnn_r50_fpn_giou_1x_coco.sh)
-Faster R-CNN R101 | CSE-Autoloss-A | 40.2% | [Link](commands/faster_rcnn_r101_fpn_giou_1x_coco.sh)
-Cascade R-CNN R50 | CSE-Autoloss-A | 40.5% | [Link](commands/cascade_rcnn_r50_fpn_giou_1x_coco.sh)
-Mask R-CNN R50 | CSE-Autoloss-A | 39.1% | [Link](commands/mask_rcnn_r50_fpn_giou_1x_coco.sh)
-FCOS R50 | CSE-Autoloss-B | 39.6% | [Link](commands/fcos_center-normbbox-centeronreg-giou_r50_caffe_fpn_gn-head_4x4_1x_coco.sh)
-ATSS R50 | CSE-Autoloss-B | 40.5% | [Link](commands/atss_r50_fpn_giou_1x_coco_w1.sh)
+Detector | Loss | Bbox mAP | Command | Checkpoint
+--- |:---:|:---:|:---:|:---:
+Faster R-CNN R50 | CSE-Autoloss-A | 38.5% | [Link](commands/faster_rcnn_r50_fpn_giou_1x_coco.sh) | [Link](https://drive.google.com/file/d/1WtKEJo5bKp4rKq6382CXs7dsd90sSWv1/view?usp=sharing)
+Faster R-CNN R101 | CSE-Autoloss-A | 40.2% | [Link](commands/faster_rcnn_r101_fpn_giou_1x_coco.sh) | -
+Cascade R-CNN R50 | CSE-Autoloss-A | 40.5% | [Link](commands/cascade_rcnn_r50_fpn_giou_1x_coco.sh) | -
+Mask R-CNN R50 | CSE-Autoloss-A | 39.1% | [Link](commands/mask_rcnn_r50_fpn_giou_1x_coco.sh) | -
+FCOS R50 | CSE-Autoloss-B | 39.6% | [Link](commands/fcos_center-normbbox-centeronreg-giou_r50_caffe_fpn_gn-head_4x4_1x_coco.sh) | [Link](https://drive.google.com/file/d/1c53qgqsIUnQ1EuOksGGfy7gdlh7PWR2S/view?usp=sharing)
+ATSS R50 | CSE-Autoloss-B | 40.5% | [Link](commands/atss_r50_fpn_giou_1x_coco_w1.sh) | -
 
 [1] We replace the centerness_target in FCOS and ATSS to the **IoU** between bbox_pred and bbox_target. Please see more details at [fcos_head.py](https://github.com/PerdonLiu/CSE-Autoloss/blob/b0a0ec56e3b531604683a8cc8e9df37a9cef3b0b/mmdet/models/dense_heads/fcos_head.py#L235-L239) and [atss_head.py](https://github.com/PerdonLiu/CSE-Autoloss/blob/b0a0ec56e3b531604683a8cc8e9df37a9cef3b0b/mmdet/models/dense_heads/atss_head.py#L196-L200).
 

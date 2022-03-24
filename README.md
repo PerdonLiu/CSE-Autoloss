@@ -88,9 +88,8 @@ If you use this toolbox or benchmark in your research, please cite this project.
   liu2021loss,
   title={Loss Function Discovery for Object Detection via Convergence-Simulation Driven Search},
   author={Peidong Liu and Gengwei Zhang and Bochao Wang and Hang Xu and Xiaodan Liang and Yong Jiang and Zhenguo Li},
-  booktitle={International Conference on Learning Representations},
-  year={2021},
-  url={https://openreview.net/forum?id=5jzlpHvvRk}
+  booktitle={ICLR},
+  year={2020},
 }
 @article{mmdetection,
   title   = {{MMDetection}: Open MMLab Detection Toolbox and Benchmark},
